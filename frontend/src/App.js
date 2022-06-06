@@ -4,14 +4,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AddTodo from './components/add-todo';
 import TodosList from './components/todos-list';
+import AddPadoms from './components/add-padoms';
+import PadomsList from './components/padoms-list';
+
 import Login from './components/login';
 import Signup from './components/signup';
 import Data from './components/data';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Navbar';
-
 import TodoDataService from './services/todos';
+
 
 function App() {
   const [user, setUser] = React.useState(null);
@@ -53,23 +56,28 @@ function App() {
         setError(e.toString());
       })
   }
-  
+
   return (
     <div className="App">
       <Navbar bg="primary" variant="dark">
         <div className="container-fluid">
-          <Navbar.Brand>TodosApp</Navbar.Brand>
+          <Navbar.Brand>TodosAndris</Navbar.Brand>
           <Nav className="me-auto">
             <Container>
-              <Link className="nav-link" to={"/todos"}>Todos</Link>
-              { user ? (
-                <Link className="nav-link" onClick={logout}>Logout ({user})</Link>
-              ) : (
+              { user ? ( 
+                <>
+              <Link className="nav-link" onClick={logout}>Logout({user})</Link>
+              <Link className="nav-link" to={"/signup"}>Create user</Link>
+              <Link className="nav-link" to={"/data"}>Data</Link>
+              <Link className="nav-link" to={"/suggest"}>Suggestions</Link>
+              <Link className="nav-link" to={"/todo"}>Todo</Link>
+                </> 
+              ):(
                 <>
                   <Link className="nav-link" to={"/login"}>Login</Link>
                   <Link className="nav-link" to={"/signup"}>Sign Up</Link>
                   <Link className="nav-link" to={"/data"}>Data</Link>
-
+                  <Link className="nav-link" to={"/suggest"}>Suggestions</Link>
                 </>
               )}
             </Container>
@@ -79,18 +87,24 @@ function App() {
       
       <div className="container mt-4">
         <Switch>	
-          <Route exact path={["/", "/todos"]} render={(props) =>
+          <Route exact path={["/", "/suggest"]} render={(props) =>
+            <PadomsList {...props} token={token} />
+          }></Route>
+          <Route path="/suggest/create" render={(props)=> 
+            <AddPadoms {...props} token={token} />
+          }></Route>
+          <Route path="/suggest/:id/" render={(props)=> 
+            <AddPadoms {...props} token={token} />
+          }></Route>
+          <Route path="/todo/create" render={(props)=> 
+            <AddTodo {...props} token={token} />
+          }></Route>
+          <Route path="/todo/:id/" render={(props)=> 
+            <AddTodo {...props} token={token} />
+          }></Route>
+          <Route exact path={["/", "/todo"]} render={(props) =>
             <TodosList {...props} token={token} />
-          }>
-          </Route>
-          <Route path="/todos/create" render={(props)=> 
-            <AddTodo {...props} token={token} />
-          }>
-          </Route>
-          <Route path="/todos/:id/" render={(props)=> 
-            <AddTodo {...props} token={token} />
-          }>
-          </Route>
+          }></Route>
           <Route path="/login" render={(props)=> 
             <Login {...props} login={login} />
           }>
@@ -99,12 +113,10 @@ function App() {
             <Signup {...props} signup={signup} />
           }>
           </Route>
-
           <Route path="/data" render={(props)=> 
             <Data {...props} token={token} />
           }>
           </Route>
-
         </Switch>
       </div>
       
