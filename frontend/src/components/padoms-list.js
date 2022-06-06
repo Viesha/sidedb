@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TodoDataService from '../services/todos';
+import PadomsDataService from '../services/padoms';
 import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
@@ -7,76 +7,74 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import moment from 'moment';
 
-const TodosList = props => {
-  const [todos, setTodos] = useState([]);
+const PadomsList = props => {
+  const [padoms, setPadoms] = useState([]);
 
   useEffect(() => {
-    retrieveTodos();
+    retrievePadoms();
   }, [props.token]);
 
-  const retrieveTodos = () => {
-    TodoDataService.getAll(props.token)
+  const retrievePadoms = () => {
+    PadomsDataService.getAll(props.token)
       .then(response => {
-        setTodos(response.data);
+        setPadoms(response.data);
       })
       .catch(e => {
         console.log(e);
       });
   }
 
-  const deleteTodo = (todoId) => {
-    TodoDataService.deleteTodo(todoId, props.token)
+  const deletePadoms = (padomsId) => {
+    PadomsDataService.deletePadoms(padomsId, props.token)
       .then(response => {
-        retrieveTodos();
+        retrievePadoms();
       })
       .catch(e => {
         console.log(e);
       });
   }
 
-  const completeTodo = (todoId) => {
-    TodoDataService.completeTodo(todoId, props.token)
+  const completePadoms = (padomsId) => {
+    PadomsDataService.completePadoms(padomsId, props.token)
       .then(response => {
-        retrieveTodos();
-        console.log("completeTodo", todoId);
+        retrievePadoms();
+        console.log("completePadoms", padomsId);
       })
       .catch(e => {
         console.log(e);
       })
   }
-
-  
 
   return (
     <Container>
-      
       {props.token == null || props.token === "" ? (
         <Alert variant='warning'>
           You are not logged in. Please <Link to={"/login"}>login</Link> to see your todos.
         </Alert>
       ) : (
         <div>
-          <Link to={"/todos/create"}>
+          <Link to={"/suggest/create"}>
             <Button variant="outline-info" className="mb-3">
-              Add To-do
+              Es sodien juku prata
             </Button>
+            
           </Link>
-          {todos.map((todo) => {
+          {padoms.map((padoms) => {
             return (
-              <Card key={todo.id} className="mb-3">
+              <Card key={padoms.id} className="mb-3">
                 <Card.Body>
-                  <div className={`${todo.completed ? "text-decoration-line-through" : ""}`}>
-                    <Card.Title>{todo.title}</Card.Title>
-                    <Card.Text><b>Memo:</b> {todo.memo}</Card.Text>
-                    <Card.Text>
-                      Date created: {moment(todo.created).format("Do MMMM YYYY")}
+                  <div className={`${padoms.completed ? "text-decoration-line-through" : ""}`}>
+                    <Card.Title style={{fontSize: 25, textAlign: "center"}}><b>{padoms.title}</b></Card.Title>
+                    <Card.Text style={{fontSize: 20, textAlign: "center"}}> {padoms.memo}</Card.Text>
+                    <Card.Text style={{fontSize: 15, textAlign: "right"}}>
+                      {moment(padoms.created).format('lll')}
                     </Card.Text>
                   </div>
-                  {!todo.completed &&
+                  {!padoms.completed &&
                     <Link to={{
-                      pathname: "/todos/" + todo.id,
+                      pathname: "/padoms/" + padoms.id,
                       state: {
-                        currentTodo: todo
+                        currentPadoms: padoms
                       }
                     }}>
                       <Button variant="outline-info" className="me-2">
@@ -84,10 +82,10 @@ const TodosList = props => {
                       </Button>
                     </Link>
                   }
-                  <Button variant="outline-danger" onClick={() => deleteTodo(todo.id)} className="me-2">
+                  <Button variant="outline-danger" onClick={() => deletePadoms(padoms.id)} className="me-2">
                     Delete
                   </Button>
-                  <Button variant="outline-success" onClick={() => completeTodo(todo.id)}>
+                  <Button variant="outline-success" onClick={() => completePadoms(padoms.id)}>
                     Complete
                   </Button>
                 </Card.Body>
@@ -100,4 +98,4 @@ const TodosList = props => {
   );
 }
 
-export default TodosList;
+export default PadomsList;
