@@ -58,7 +58,7 @@ else:dati_apr='Pēdējās h elektrības pateriņš ir ļoti zems ( '+ str(last_v
 
 NedDif=(PatDiena['El paterins'].iat[-2]/NedelasVidejais)*100-100 # % atsķirība starp iepriekšējās dienas patēriņu, un vidējo patēriņu.
 
-# ---           Teksta izveide          ---
+# ---       --    Teksta izveide         -- ---
 dati_apr = dati_apr + " Pēdējās dienas patēriņš ir " + str(round(PatDiena['El paterins'].iat[-2],2))+ " kWh, " 
 if NedelasVidejais > 0:
     dati_apr = dati_apr + "tas ir par "+str(round(NedDif,2))+"% vairāk par vidējo patēriņu ( "
